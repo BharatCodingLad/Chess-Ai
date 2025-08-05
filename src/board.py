@@ -2,6 +2,7 @@ from const import *
 from square import Square
 from piece import *
 from dragger import *
+from move import Move
 class Board:
     def __init__(self):
         self.squares = [[0,0,0,0,0,0,0,0] for col in range(cols)]
@@ -10,6 +11,41 @@ class Board:
         self._add_pieces("black")
     def calc_moves(self,piece,row,col):
         # this is going to calculate the moves a selected piece
+        piece.moves = [] 
+        def pawn_moves(row,col):
+            # 2 moves
+            if piece.moved:
+                steps = 1
+            else :
+                steps = 2
+            # vertical moves
+            start = row + piece.dir
+            end = row + (piece.dir * (1+steps))
+            for mov_row in range(start,end,piece.dir):
+                if Square.in_range(mov_row,col):
+                    if self.squares[mov_row][col].isempty():
+                        # create initial and final sqaures
+                        initial = Square(row,col)
+                        final = Square(mov_row,col)
+                        move = Move(initial,final)
+                        piece.add_move(move)
+                    # mean we are blocked    
+                    else :  
+                        break  
+                else :
+                    break
+            # diagonal move    
+            move_row = row+piece.dir
+            move_col = [col-1,col+1]
+            for possible_col in move_col:
+                if Square.in_range(move_row,possible_col):
+                    if self.squares[move_row][possible_col].has_rival_piece(piece.color):
+                        # create initial and final sqaures
+                        initial = Square(row,col)
+                        final = Square(move_row,possible_col)
+                        move = Move(initial,final)
+                        piece.add_move(move)
+            
         def kinght_moves(row,col):
             #8 moves
             possible_moves = [
@@ -21,11 +57,18 @@ class Board:
             for possible in possible_moves:
                 possible_row , possible_col = possible
                 if Square.in_range(possible_row,possible_col):
-                    pass
+                    if self.squares[possible_row][possible_col].isempty_or_rival(piece.color):
+                         # create a square of a move
+                        initial = Square(row,col)
+                        final = Square(possible_row,possible_col) # piece = piece
+                        # move
+                        move =Move(initial,final)
+                        #append new valid move
+                        piece.add_move(move)
         if piece.name == "pawn":
-            pass
+            pawn_moves(row,col)
         elif piece.name == "knight":
-            pass
+            kinght_moves(row,col)
         elif piece.name == "bishop":
             pass
         elif piece.name == "rook":

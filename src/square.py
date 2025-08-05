@@ -1,4 +1,10 @@
 class Square:
+    @staticmethod
+    def in_range(*args):
+        for arg in args:
+            if arg < 0 or arg > 7:
+                return False
+        return True
     def __init__(self,row,col,piece = None):
         self.row = row
         self.col =col
@@ -12,10 +18,4 @@ class Square:
     def has_team_piece(self,color):
         return self.has_piece() and self.piece.color == color
     def isempty_or_rival(self,color):
-        pass
-    @staticmethod
-    def in_range(*args):
-        for args in args:
-            if args < 0 or args > 7:
-                return False
-            return True
+        return self.isempty() or self.has_rival_piece(color)
