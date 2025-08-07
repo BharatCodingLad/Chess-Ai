@@ -9,6 +9,7 @@ class Board:
         self._create()
         self._add_pieces("white")
         self._add_pieces("black")
+        self.last_move = None
     def calc_moves(self,piece,row,col):
         # this is going to calculate the moves a selected piece
         piece.moves = [] 
@@ -45,7 +46,28 @@ class Board:
                         final = Square(move_row,possible_col)
                         move = Move(initial,final)
                         piece.add_move(move)
-            
+        def straightLine_moves(incrs):
+            for incr in incrs:
+                row_incr,col_incr = incr
+                possible_row = row + row_incr
+                possible_col = col + col_incr
+                #while True
+                while True:
+                  if Square.in_range(possible_row,possible_col):
+                    intitial = Square(row,col)
+                    final = Square(possible_row,possible_col)
+                    move = Move(intitial,final)
+                    if self.squares[possible_row][possible_col].isempty():   
+                        #create a new move 
+                        piece.add_move(move)
+                    if self.squares[possible_row][possible_col].has_rival_piece(piece.color):
+                        piece.add_move(move)  
+                        break
+                    if self.squares[possible_row][possible_col].has_team_piece(piece.color):
+                        break
+                  else : break       
+                  possible_row += row_incr
+                  possible_col += col_incr    
         def kinght_moves(row,col):
             #8 moves
             possible_moves = [
@@ -65,18 +87,34 @@ class Board:
                         move =Move(initial,final)
                         #append new valid move
                         piece.add_move(move)
+        def king_moves():
+            adjs = [
+                (row-1,col-1),(row-1,col),(row-1,col+1),
+                (row,col-1),(row,col+1),
+                (row+1,col-1),(row+1,col),(row+1,col+1)
+            ]    
+            for moves in adjs:
+                possible_row,possible_col = moves
+                if Square.in_range(possible_row,possible_col):
+                    if self.squares[possible_row][possible_col].isempty_or_rival(piece.color):
+                        initial = Square(row,col)
+                        final = Square(possible_row,possible_col)
+                        move = Move(initial,final)
+                        piece.add_move(move) 
+                    if self.squares[possible_row][possible_col].has_team_piece(piece.color):
+                        continue             
         if piece.name == "pawn":
             pawn_moves(row,col)
         elif piece.name == "knight":
             kinght_moves(row,col)
         elif piece.name == "bishop":
-            pass
+            straightLine_moves([(-1,1),(-1,-1),(1,1),(1,-1)])
         elif piece.name == "rook":
-            pass
+            straightLine_moves([(1,0),(-1,0),(0,1),(0,-1)])
         elif piece.name == "queen":
-            pass
+            straightLine_moves([(-1,1),(-1,-1),(1,1),(1,-1),(1,0),(-1,0),(0,1),(0,-1)])
         elif piece.name == "king":
-            pass
+            king_moves()
     def _create(self):
         for row in range(rows):
             for col in range(cols):
@@ -100,4 +138,18 @@ class Board:
         #quuen and king
         self.squares[row_other][3] = Square(row_other,3,Queen(color))
         self.squares[row_other][4] = Square(row_other,4,King(color))
-        
+    def move(self,piece,move):
+        initial = move.initial
+        final = move.final
+        self.squares[initial.row][initial.col].piece = None  
+        self.squares[final.row][final.col].piece = piece
+        piece.moved = True
+        piece.moves = []
+        piece.clear_moves()
+        self.last_move = move
+    def valid_move(self,piece,move):
+           return move in piece.moves
+    def __eq__(self,other):
+        return self.initial == other.initial and self.final == other.final
+    def clear_moves(self):
+        self.moves = []

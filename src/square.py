@@ -5,6 +5,8 @@ class Square:
             if arg < 0 or arg > 7:
                 return False
         return True
+    def __eq__(self,other):
+        return self.row == other.row and self.col == other.col
     def __init__(self,row,col,piece = None):
         self.row = row
         self.col =col
