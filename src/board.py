@@ -47,7 +47,6 @@ class Board:
                         piece.add_move(move)
             
         def kinght_moves(row,col):
-            # hello this is just to make an move 
             #8 moves
             possible_moves = [
                 (row-2,col-1),(row-2,col+1),
