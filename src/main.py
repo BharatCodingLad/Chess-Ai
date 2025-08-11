@@ -4,6 +4,7 @@ from const import *
 from game import Game
 from square import Square
 from move import Move
+# little bit modified from the original code
 class Main :
     def __init__(self):
         pygame.init()
