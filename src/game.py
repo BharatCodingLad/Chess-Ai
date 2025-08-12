@@ -4,6 +4,7 @@ from board import Board
 from dragger import Dragger
 class Game:
     def __init__(self):
+        self.next_player = "white"
         self.board = Board()
         self.dragger = Dragger()
     def show_bg(self, surface):
@@ -38,4 +39,7 @@ class Game:
                 rect = (move.final.col * SqSize, move.final.row * SqSize, SqSize, SqSize)
                 #blit
                 pygame.draw.rect(surface,color,rect)
+    # next turn
+    def next_turn(self):
+        self.next_player = 'white' if self.next_player == 'black' else 'black'       
                                  

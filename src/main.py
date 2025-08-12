@@ -4,7 +4,6 @@ from const import *
 from game import Game
 from square import Square
 from move import Move
-# little bit modified from the original code
 class Main :
     def __init__(self):
         pygame.init()
@@ -31,12 +30,14 @@ class Main :
                     # if clicked square has a piece?
                     if board.squares[clicked_row][clicked_col].has_piece():
                         piece = board.squares[clicked_row][clicked_col].piece
-                        board.calc_moves(piece,clicked_row,clicked_col)
-                        dragger.save_initial(event.pos)
-                        dragger.drag_piece(piece)
-                        game.show_bg(screen)
-                        game.show_moves(screen)
-                        game.show_pieces(screen)
+                        # valid piece color?
+                        if piece.color == game.next_player:
+                           board.calc_moves(piece,clicked_row,clicked_col)
+                           dragger.save_initial(event.pos)
+                           dragger.drag_piece(piece)
+                           game.show_bg(screen)
+                           game.show_moves(screen)
+                           game.show_pieces(screen)
                 #mouse motion
                 elif event.type == pygame.MOUSEMOTION:
                     if dragger.dragging:
@@ -59,6 +60,7 @@ class Main :
                             #show methods
                             game.show_bg(screen)
                             game.show_pieces(screen)
+                            game.next_turn()
                     dragger.undrag_piece()
                 #quit
                 elif event.type == pygame.QUIT:
