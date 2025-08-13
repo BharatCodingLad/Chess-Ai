@@ -21,16 +21,7 @@ class Game:
         self.hovered_square = self.board.squares[row][col]
     def show_bg(self, surface):
         theme = self.config.theme
-        for row in range(rows):
-            for col in range(cols):
-                #color
-                color = theme.bg.light if (row + col) % 2 == 0 else theme.bg.dark
-                if(row + col) % 2 == 0 :
-                    color = (234,235,200) # green
-                else :
-                    color = (119,154,88) # dark green
-                rect = (col * SqSize,row * SqSize,SqSize,SqSize)
-                pygame.draw.rect(surface,color,rect)    
+        self.board.show_bg(surface, theme)
     def show_pieces(self,surface):
         for row in range(rows):
             for  col in range(cols):

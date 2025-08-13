@@ -75,13 +75,6 @@ class Main :
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_t:
                         game.Change_theme()
-                        # Redraw everything with the new theme
-                        game.show_bg(screen)
-                        game.Show_last_move(screen)
-                        game.show_moves(screen)
-                        game.show_hover(screen)
-                        game.show_pieces(screen)
-                        pygame.display.update()
                 #quit
                 elif event.type == pygame.QUIT:
                     pygame.quit()
@@ -90,4 +83,4 @@ class Main :
             pygame.display.update()        
                     
 main = Main()
-main.mainloop()
+main.mainloop()    

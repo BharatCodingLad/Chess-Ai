@@ -163,3 +163,9 @@ class Board:
         return self.initial == other.initial and self.final == other.final
     def clear_moves(self):
         self.moves = []
+    def show_bg(self, surface, theme):
+        for row in range(rows):
+            for col in range(cols):
+                color = theme.bg.light if (row + col) % 2 == 0 else theme.bg.dark
+                rect = (col * SqSize, row * SqSize, SqSize, SqSize)
+                pygame.draw.rect(surface, color, rect)
