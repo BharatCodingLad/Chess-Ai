@@ -3,6 +3,7 @@ from square import Square
 from piece import *
 from dragger import *
 from move import Move
+from config import Config
 class Board:
     def __init__(self):
         self.squares = [[0,0,0,0,0,0,0,0] for col in range(cols)]
@@ -10,6 +11,15 @@ class Board:
         self._add_pieces("white")
         self._add_pieces("black")
         self.last_move = None
+    def show_last_move(self, surface, theme):
+        if self.last_move:
+            initial = self.last_move.initial
+            final = self.last_move.final
+            for pos in [initial, final]:
+                color = theme.trace.light if (pos.row + pos.col) % 2 == 0 else theme.trace.dark
+                rect = (pos.col * SqSize, pos.row * SqSize, SqSize, SqSize)
+                pygame.draw.rect(surface, color, rect)
+                
     def calc_moves(self,piece,row,col):
         # this is going to calculate the moves a selected piece
         piece.moves = [] 

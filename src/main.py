@@ -17,7 +17,9 @@ class Main :
         board = self.game.board
         while(True):
             game.show_bg(screen)
+            game.Show_last_move(screen)
             game.show_moves(screen)
+            game.show_hover(screen)
             game.show_pieces(screen)
             if dragger.dragging:
                 dragger.update_blit(screen)
@@ -36,14 +38,20 @@ class Main :
                            dragger.save_initial(event.pos)
                            dragger.drag_piece(piece)
                            game.show_bg(screen)
+                           game.Show_last_move(screen)
                            game.show_moves(screen)
                            game.show_pieces(screen)
                 #mouse motion
                 elif event.type == pygame.MOUSEMOTION:
+                    motion_row = event.pos[1] // SqSize
+                    motion_col = event.pos[0] // SqSize
+                    game.set_hover(motion_row,motion_col)
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
                         game.show_bg(screen)
+                        game.Show_last_move(screen)
                         game.show_moves(screen)
+                        game.show_hover(screen)
                         game.show_pieces(screen)
                         dragger.update_blit(screen)
                 #click release
@@ -59,9 +67,21 @@ class Main :
                             board.move(dragger.piece,move)
                             #show methods
                             game.show_bg(screen)
+                            game.Show_last_move(screen)
                             game.show_pieces(screen)
                             game.next_turn()
                     dragger.undrag_piece()
+                # key press
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_t:
+                        game.Change_theme()
+                        # Redraw everything with the new theme
+                        game.show_bg(screen)
+                        game.Show_last_move(screen)
+                        game.show_moves(screen)
+                        game.show_hover(screen)
+                        game.show_pieces(screen)
+                        pygame.display.update()
                 #quit
                 elif event.type == pygame.QUIT:
                     pygame.quit()
@@ -70,4 +90,4 @@ class Main :
             pygame.display.update()        
                     
 main = Main()
-main.mainloop()    
+main.mainloop()
